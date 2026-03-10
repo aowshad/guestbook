@@ -3,259 +3,290 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>The Guestbook ✦</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── THEMES ── */
     [data-theme="parchment"] {
-      --bg: #f5f0e8; --ink: #1a1208; --rust: #b5451b; --gold: #c8922a;
-      --muted: #8a7f6e; --card: #fdfaf4; --border: #d9d0be;
-      --avatar-text: #fdfaf4; --pin-bg: #fff8ee; --pin-border: #f0c060;
+      --bg:#f5f0e8; --ink:#1a1208; --rust:#b5451b; --gold:#c8922a;
+      --muted:#8a7f6e; --card:#fdfaf4; --border:#d9d0be;
+      --avatar-text:#fdfaf4; --pin-bg:#fff8ee; --pin-border:#f0c060;
+      --overlay:rgba(245,240,232,0.96);
     }
     [data-theme="dark"] {
-      --bg: #141414; --ink: #e8e0d0; --rust: #e8714a; --gold: #d4a845;
-      --muted: #7a7060; --card: #1e1c18; --border: #2e2b24;
-      --avatar-text: #141414; --pin-bg: #1e1a0e; --pin-border: #6a5010;
+      --bg:#141414; --ink:#e8e0d0; --rust:#e8714a; --gold:#d4a845;
+      --muted:#7a7060; --card:#1e1c18; --border:#2e2b24;
+      --avatar-text:#141414; --pin-bg:#1e1a0e; --pin-border:#6a5010;
+      --overlay:rgba(20,20,20,0.97);
     }
     [data-theme="forest"] {
-      --bg: #f0f4ee; --ink: #1a2a1a; --rust: #4a7c3f; --gold: #7aaa5a;
-      --muted: #6a8060; --card: #f8fbf6; --border: #c8d8c0;
-      --avatar-text: #f8fbf6; --pin-bg: #eef8e8; --pin-border: #a0d080;
+      --bg:#f0f4ee; --ink:#1a2a1a; --rust:#4a7c3f; --gold:#7aaa5a;
+      --muted:#6a8060; --card:#f8fbf6; --border:#c8d8c0;
+      --avatar-text:#f8fbf6; --pin-bg:#eef8e8; --pin-border:#a0d080;
+      --overlay:rgba(240,244,238,0.97);
     }
     [data-theme="ocean"] {
-      --bg: #eef2f8; --ink: #0e1e3a; --rust: #2a5aaa; --gold: #4a8adc;
-      --muted: #5a7090; --card: #f6f8fc; --border: #c0cce0;
-      --avatar-text: #f6f8fc; --pin-bg: #eaf0fc; --pin-border: #90b8f0;
+      --bg:#eef2f8; --ink:#0e1e3a; --rust:#2a5aaa; --gold:#4a8adc;
+      --muted:#5a7090; --card:#f6f8fc; --border:#c0cce0;
+      --avatar-text:#f6f8fc; --pin-bg:#eaf0fc; --pin-border:#90b8f0;
+      --overlay:rgba(238,242,248,0.97);
     }
     [data-theme="rose"] {
-      --bg: #fdf0f4; --ink: #2a0e18; --rust: #c04060; --gold: #e07090;
-      --muted: #906070; --card: #fff6f8; --border: #e8c0cc;
-      --avatar-text: #fff6f8; --pin-bg: #fff0f4; --pin-border: #f0a0b8;
+      --bg:#fdf0f4; --ink:#2a0e18; --rust:#c04060; --gold:#e07090;
+      --muted:#906070; --card:#fff6f8; --border:#e8c0cc;
+      --avatar-text:#fff6f8; --pin-bg:#fff0f4; --pin-border:#f0a0b8;
+      --overlay:rgba(253,240,244,0.97);
     }
 
     body {
       background: var(--bg); color: var(--ink);
       font-family: 'DM Mono', monospace; min-height: 100vh;
-      padding: 2rem 1rem 5rem;
-      transition: background 0.3s, color 0.3s;
+      padding: 2rem 1rem 5rem; transition: background 0.3s, color 0.3s;
     }
     body::before {
-      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.4;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:999; opacity:0.4;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
     }
-
     .wrapper { max-width: 680px; margin: 0 auto; }
 
-    /* TOP BAR */
-    .top-bar {
-      display: flex; justify-content: flex-end; align-items: center;
-      gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;
-    }
+    /* ── TOP BAR ── */
+    .top-bar { display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+    .top-left { display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; }
+    .theme-label { font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); }
+    .swatches { display:flex; gap:0.35rem; }
+    .swatch { width:18px; height:18px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:transform 0.15s,border-color 0.15s; }
+    .swatch:hover { transform:scale(1.2); }
+    .swatch.active { border-color:var(--ink); transform:scale(1.15); }
+    .swatch[data-t="parchment"] { background:#f5f0e8; outline:1px solid #d9d0be; }
+    .swatch[data-t="dark"]      { background:#141414; }
+    .swatch[data-t="forest"]    { background:#4a7c3f; }
+    .swatch[data-t="ocean"]     { background:#2a5aaa; }
+    .swatch[data-t="rose"]      { background:#c04060; }
 
-    /* THEME SWATCHES */
-    .theme-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-right: 0.25rem; }
-    .swatches { display: flex; gap: 0.35rem; align-items: center; }
-    .swatch {
-      width: 18px; height: 18px; border-radius: 50%; cursor: pointer;
-      border: 2px solid transparent; transition: transform 0.15s, border-color 0.15s;
-    }
-    .swatch:hover { transform: scale(1.2); }
-    .swatch.active { border-color: var(--ink); transform: scale(1.15); }
-    .swatch[data-t="parchment"] { background: #f5f0e8; outline: 1px solid #d9d0be; }
-    .swatch[data-t="dark"]      { background: #141414; }
-    .swatch[data-t="forest"]    { background: #4a7c3f; }
-    .swatch[data-t="ocean"]     { background: #2a5aaa; }
-    .swatch[data-t="rose"]      { background: #c04060; }
-
-    /* DARK MODE TOGGLE */
     .dark-toggle {
-      display: flex; align-items: center; gap: 0.4rem;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 20px; padding: 0.3rem 0.7rem;
-      font-size: 0.7rem; color: var(--muted); cursor: pointer;
-      transition: all 0.2s; margin-left: 0.5rem;
+      display:flex; align-items:center; gap:0.4rem;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:20px; padding:0.3rem 0.7rem;
+      font-size:0.7rem; color:var(--muted); cursor:pointer; transition:all 0.2s;
     }
-    .dark-toggle:hover { border-color: var(--gold); color: var(--ink); }
-    .toggle-icon { font-size: 0.85rem; }
+    .dark-toggle:hover { border-color:var(--gold); color:var(--ink); }
 
-    /* HEADER */
-    header { text-align: center; padding: 2.5rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-    header::before { content: '✦  ✦  ✦'; display: block; font-size: 0.7rem; letter-spacing: 0.5em; color: var(--gold); margin-bottom: 1.2rem; }
-    h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem,6vw,3.6rem); font-weight: 700; line-height: 1.1; }
-    h1 em { font-style: italic; color: var(--rust); }
-    .subtitle { margin-top: 0.8rem; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-
-    /* STATS */
-    .stats-bar {
-      display: flex; justify-content: center; gap: 2rem;
-      margin: 0 0 2rem; padding: 1.2rem;
-      border: 1px solid var(--border); background: var(--card); border-radius: 2px;
-      transition: background 0.3s, border-color 0.3s;
+    /* ── AUTH BUTTON / USER PILL ── */
+    .auth-btn {
+      display:flex; align-items:center; gap:0.4rem;
+      background:var(--ink); color:var(--bg);
+      border:none; border-radius:20px; padding:0.35rem 0.9rem;
+      font-family:'DM Mono',monospace; font-size:0.7rem;
+      letter-spacing:0.05em; cursor:pointer; transition:background 0.2s;
     }
-    .stat { text-align: center; }
-    .stat-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--rust); display: block; }
-    .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .auth-btn:hover { background:var(--rust); }
 
-    /* FORM */
-    .form-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 2px;
-      padding: 2rem 2rem 1.8rem; margin-bottom: 2rem; box-shadow: 3px 3px 0 var(--border);
-      transition: background 0.3s, border-color 0.3s;
+    .user-pill {
+      display:flex; align-items:center; gap:0.5rem;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:20px; padding:0.3rem 0.8rem 0.3rem 0.4rem;
+      font-size:0.7rem; color:var(--ink);
     }
-    .form-card h2 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 1.4rem; }
-    .field { margin-bottom: 1.1rem; }
-    label { display: block; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
-    input, textarea {
-      width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 1px;
-      padding: 0.65rem 0.9rem; font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--ink);
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.3s; outline: none;
+    .user-pill .mini-avatar {
+      width:22px; height:22px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:0.6rem; font-weight:700; color:var(--avatar-text);
     }
-    textarea { resize: vertical; min-height: 90px; }
-    input:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,146,42,0.12); }
+    .signout-btn {
+      background:none; border:none; color:var(--muted); font-size:0.65rem;
+      cursor:pointer; font-family:'DM Mono',monospace; margin-left:0.3rem;
+      padding:0; transition:color 0.15s;
+    }
+    .signout-btn:hover { color:var(--rust); }
 
-    /* MOOD */
-    .mood-picker { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.4rem; }
-    .mood-btn {
-      background: var(--bg); border: 1px solid var(--border); border-radius: 2px;
-      padding: 0.38rem 0.55rem; font-size: 1.1rem; cursor: pointer;
-      transition: all 0.15s; line-height: 1;
+    /* ── AUTH MODAL ── */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,0.5);
+      z-index:1000; display:flex; align-items:center; justify-content:center;
+      padding:1rem; opacity:0; pointer-events:none; transition:opacity 0.2s;
     }
-    .mood-btn:hover { border-color: var(--gold); transform: scale(1.1); }
-    .mood-btn.selected { border-color: var(--rust); background: var(--pin-bg); box-shadow: 0 0 0 2px rgba(181,69,27,0.15); transform: scale(1.15); }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
 
-    .char-count { font-size: 0.62rem; color: var(--muted); text-align: right; margin-top: 0.3rem; }
+    .modal {
+      background:var(--overlay); border:1px solid var(--border);
+      border-radius:3px; padding:2rem; width:100%; max-width:400px;
+      box-shadow:6px 6px 0 var(--border); transform:translateY(12px);
+      transition:transform 0.2s;
+    }
+    .modal-overlay.open .modal { transform:translateY(0); }
+
+    .modal h2 { font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:0.4rem; }
+    .modal p  { font-size:0.72rem; color:var(--muted); margin-bottom:1.4rem; }
+
+    .modal .field { margin-bottom:1rem; }
+    .modal label { display:block; font-size:0.63rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:0.35rem; }
+    .modal input {
+      width:100%; background:var(--bg); border:1px solid var(--border);
+      border-radius:1px; padding:0.6rem 0.85rem;
+      font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--ink);
+      outline:none; transition:border-color 0.2s,box-shadow 0.2s;
+    }
+    .modal input:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(200,146,42,0.12); }
+
+    .modal-submit {
+      width:100%; background:var(--ink); color:var(--bg); border:none;
+      padding:0.75rem; font-family:'DM Mono',monospace; font-size:0.8rem;
+      letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;
+      border-radius:1px; transition:background 0.2s; margin-top:0.5rem;
+    }
+    .modal-submit:hover { background:var(--rust); }
+    .modal-submit:disabled { opacity:0.5; cursor:not-allowed; }
+
+    .modal-switch { font-size:0.7rem; color:var(--muted); text-align:center; margin-top:1rem; }
+    .modal-switch span { color:var(--rust); cursor:pointer; text-decoration:underline; }
+    .modal-close { float:right; background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--muted); margin-top:-0.3rem; }
+    .modal-error { font-size:0.72rem; color:#9b2b1c; background:#fdf0ed; border:1px solid #f0b8ad; padding:0.45rem 0.7rem; border-radius:1px; margin-bottom:0.8rem; display:none; }
+    .modal-error.show { display:block; }
+
+    /* ── HEADER ── */
+    header { text-align:center; padding:2.5rem 0 2rem; border-bottom:1px solid var(--border); margin-bottom:2rem; }
+    header::before { content:'✦  ✦  ✦'; display:block; font-size:0.7rem; letter-spacing:0.5em; color:var(--gold); margin-bottom:1.2rem; }
+    h1 { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,6vw,3.6rem); font-weight:700; line-height:1.1; }
+    h1 em { font-style:italic; color:var(--rust); }
+    .subtitle { margin-top:0.8rem; font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); }
+
+    /* ── STATS ── */
+    .stats-bar { display:flex; justify-content:center; gap:2rem; margin:0 0 2rem; padding:1.2rem; border:1px solid var(--border); background:var(--card); border-radius:2px; transition:background 0.3s,border-color 0.3s; }
+    .stat { text-align:center; }
+    .stat-num { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--rust); display:block; }
+    .stat-label { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); }
+
+    /* ── FORM ── */
+    .form-card { background:var(--card); border:1px solid var(--border); border-radius:2px; padding:2rem 2rem 1.8rem; margin-bottom:2rem; box-shadow:3px 3px 0 var(--border); transition:background 0.3s,border-color 0.3s; }
+    .form-card h2 { font-family:'Playfair Display',serif; font-size:1.15rem; margin-bottom:0.5rem; }
+    .form-card .form-sub { font-size:0.7rem; color:var(--muted); margin-bottom:1.3rem; }
+    .form-card .form-sub span { color:var(--rust); cursor:pointer; text-decoration:underline; }
+
+    .field { margin-bottom:1.1rem; }
+    label { display:block; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.4rem; }
+    input[type=text], textarea {
+      width:100%; background:var(--bg); border:1px solid var(--border); border-radius:1px;
+      padding:0.65rem 0.9rem; font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--ink);
+      transition:border-color 0.2s,box-shadow 0.2s,background 0.3s; outline:none;
+    }
+    textarea { resize:vertical; min-height:90px; }
+    input[type=text]:focus, textarea:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(200,146,42,0.12); }
+
+    .login-prompt {
+      text-align:center; padding:1.2rem;
+      border:1px dashed var(--border); border-radius:2px;
+      font-size:0.78rem; color:var(--muted);
+    }
+    .login-prompt strong { color:var(--rust); cursor:pointer; text-decoration:underline; }
+
+    .mood-picker { display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.4rem; }
+    .mood-btn { background:var(--bg); border:1px solid var(--border); border-radius:2px; padding:0.38rem 0.55rem; font-size:1.1rem; cursor:pointer; transition:all 0.15s; line-height:1; }
+    .mood-btn:hover { border-color:var(--gold); transform:scale(1.1); }
+    .mood-btn.selected { border-color:var(--rust); background:var(--pin-bg); transform:scale(1.15); }
+
+    .char-count { font-size:0.62rem; color:var(--muted); text-align:right; margin-top:0.3rem; }
 
     button[type="submit"] {
-      display: flex; align-items: center; gap: 0.5rem; margin-top: 1.2rem;
-      background: var(--ink); color: var(--bg); border: none; padding: 0.75rem 1.6rem;
-      font-family: 'DM Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em;
-      text-transform: uppercase; cursor: pointer; border-radius: 1px; transition: background 0.2s, transform 0.1s;
+      display:flex; align-items:center; gap:0.5rem; margin-top:1.2rem;
+      background:var(--ink); color:var(--bg); border:none; padding:0.75rem 1.6rem;
+      font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:0.1em;
+      text-transform:uppercase; cursor:pointer; border-radius:1px; transition:background 0.2s,transform 0.1s;
     }
-    button[type="submit"]:hover { background: var(--rust); }
-    button[type="submit"]:active { transform: translateY(1px); }
-    button[type="submit"]:disabled { opacity: 0.5; cursor: not-allowed; }
+    button[type="submit"]:hover { background:var(--rust); }
+    button[type="submit"]:active { transform:translateY(1px); }
+    button[type="submit"]:disabled { opacity:0.5; cursor:not-allowed; }
 
-    .spinner { width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: var(--bg); border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
-    .loading .spinner { display: block; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { width:12px; height:12px; border:2px solid rgba(255,255,255,0.3); border-top-color:var(--bg); border-radius:50%; animation:spin 0.6s linear infinite; display:none; }
+    .loading .spinner { display:block; }
+    @keyframes spin { to{transform:rotate(360deg)} }
 
-    .toast { font-size: 0.75rem; padding: 0.5rem 0.8rem; border-radius: 1px; margin-top: 0.8rem; display: none; }
-    .toast.success { background: #eef6ee; color: #2d6a2d; border: 1px solid #b5d6b5; display: block; }
-    .toast.error   { background: #fdf0ed; color: #9b2b1c; border: 1px solid #f0b8ad; display: block; }
+    .toast { font-size:0.75rem; padding:0.5rem 0.8rem; border-radius:1px; margin-top:0.8rem; display:none; }
+    .toast.success { background:#eef6ee; color:#2d6a2d; border:1px solid #b5d6b5; display:block; }
+    .toast.error   { background:#fdf0ed; color:#9b2b1c; border:1px solid #f0b8ad; display:block; }
 
-    /* ENTRIES CONTROLS */
-    .entries-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap; }
-    .entries-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
-    .count-badge { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-    .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #4caf50; margin-right: 5px; animation: pulse 2s infinite; }
+    /* ── ENTRIES CONTROLS ── */
+    .entries-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; gap:1rem; flex-wrap:wrap; }
+    .entries-header h2 { font-family:'Playfair Display',serif; font-size:1.3rem; }
+    .count-badge { font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+    .live-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#4caf50; margin-right:5px; animation:pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    .search-bar { width: 100%; margin-bottom: 1rem; position: relative; }
-    .search-bar input { padding-left: 2.2rem; font-size: 0.8rem; }
-    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem; pointer-events: none; }
+    .search-bar { width:100%; margin-bottom:1rem; position:relative; }
+    .search-bar input { padding-left:2.2rem; font-size:0.8rem; }
+    .search-icon { position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); color:var(--muted); font-size:0.9rem; pointer-events:none; }
 
-    .sort-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
-    .sort-tab {
-      font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em;
-      text-transform: uppercase; padding: 0.35rem 0.75rem; border: 1px solid var(--border);
-      background: transparent; color: var(--muted); cursor: pointer; border-radius: 1px; transition: all 0.15s;
-    }
-    .sort-tab:hover { border-color: var(--gold); color: var(--ink); }
-    .sort-tab.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .sort-tabs { display:flex; gap:0.4rem; margin-bottom:1.2rem; flex-wrap:wrap; }
+    .sort-tab { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; padding:0.35rem 0.75rem; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; border-radius:1px; transition:all 0.15s; }
+    .sort-tab:hover { border-color:var(--gold); color:var(--ink); }
+    .sort-tab.active { background:var(--ink); color:var(--bg); border-color:var(--ink); }
 
-    /* ENTRY CARDS */
-    #entries-list { display: flex; flex-direction: column; gap: 1rem; }
-
-    .entry-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 2px;
-      padding: 1.2rem 1.4rem 1rem; position: relative;
-      animation: fadeSlide 0.4s ease both; transition: box-shadow 0.2s, background 0.3s, border-color 0.3s;
-    }
-    .entry-card:hover { box-shadow: 3px 3px 0 var(--border); }
-    .entry-card.pinned-card {
-      border-color: var(--pin-border); background: var(--pin-bg);
-      box-shadow: 3px 3px 0 var(--pin-border);
-    }
-
+    /* ── ENTRY CARDS ── */
+    #entries-list { display:flex; flex-direction:column; gap:1rem; }
+    .entry-card { background:var(--card); border:1px solid var(--border); border-radius:2px; padding:1.2rem 1.4rem 1rem; position:relative; animation:fadeSlide 0.4s ease both; transition:box-shadow 0.2s,background 0.3s,border-color 0.3s; }
+    .entry-card:hover { box-shadow:3px 3px 0 var(--border); }
+    .entry-card.pinned-card { border-color:var(--pin-border); background:var(--pin-bg); box-shadow:3px 3px 0 var(--pin-border); }
     @keyframes fadeSlide { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
 
-    .pin-banner {
-      font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.3rem;
-    }
+    .pin-banner { font-size:0.58rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); margin-bottom:0.7rem; }
 
-    .entry-top { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .entry-top { display:flex; align-items:flex-start; gap:0.75rem; margin-bottom:0.5rem; }
 
-    /* AVATAR */
-    .avatar {
-      width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700;
-      color: var(--avatar-text); letter-spacing: 0; position: relative;
-      border: 2px solid transparent;
-    }
-    .avatar-inner { position: relative; z-index: 1; }
+    .avatar { width:38px; height:38px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--avatar-text); }
 
-    .entry-meta { flex: 1; min-width: 0; }
-    .entry-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; }
-    .entry-time { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.05em; margin-top: 0.15rem; }
-    .entry-message { font-size: 0.82rem; line-height: 1.65; color: var(--ink); opacity: 0.85; margin-left: 3.15rem; }
+    .entry-meta { flex:1; min-width:0; }
+    .entry-name { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; display:flex; align-items:center; gap:0.5rem; }
+    .yours-badge { font-size:0.55rem; letter-spacing:0.08em; text-transform:uppercase; background:var(--rust); color:var(--bg); padding:0.15rem 0.45rem; border-radius:10px; font-family:'DM Mono',monospace; font-weight:400; }
+    .entry-time { font-size:0.6rem; color:var(--muted); letter-spacing:0.05em; margin-top:0.15rem; }
+    .entry-message { font-size:0.82rem; line-height:1.65; color:var(--ink); opacity:0.85; margin-left:3.15rem; }
 
-    .entry-footer { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.8rem; margin-left: 3.15rem; }
+    .entry-footer { display:flex; align-items:center; gap:0.5rem; margin-top:0.8rem; margin-left:3.15rem; flex-wrap:wrap; }
 
-    .like-btn {
-      display: flex; align-items: center; gap: 0.35rem; background: none;
-      border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.65rem;
-      font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted);
-      cursor: pointer; transition: all 0.15s; letter-spacing: 0.05em;
-    }
-    .like-btn:hover { border-color: var(--rust); color: var(--rust); }
-    .like-btn.liked { background: var(--pin-bg); border-color: var(--rust); color: var(--rust); }
-    .like-btn .heart { font-size: 0.8rem; }
+    .like-btn { display:flex; align-items:center; gap:0.35rem; background:none; border:1px solid var(--border); border-radius:20px; padding:0.25rem 0.65rem; font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+    .like-btn:hover { border-color:var(--rust); color:var(--rust); }
+    .like-btn.liked { background:var(--pin-bg); border-color:var(--rust); color:var(--rust); }
 
-    .pin-btn {
-      display: flex; align-items: center; gap: 0.35rem; background: none;
-      border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.6rem;
-      font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted);
-      cursor: pointer; transition: all 0.15s; letter-spacing: 0.05em;
-    }
-    .pin-btn:hover { border-color: var(--gold); color: var(--gold); }
-    .pin-btn.pinned { background: var(--pin-bg); border-color: var(--pin-border); color: var(--gold); }
+    .pin-btn { display:flex; align-items:center; gap:0.3rem; background:none; border:1px solid var(--border); border-radius:20px; padding:0.25rem 0.6rem; font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+    .pin-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .pin-btn.pinned { background:var(--pin-bg); border-color:var(--pin-border); color:var(--gold); }
 
-    mark { background: rgba(200,146,42,0.25); color: inherit; border-radius: 2px; padding: 0 1px; }
+    .delete-btn { display:flex; align-items:center; gap:0.3rem; background:none; border:1px solid var(--border); border-radius:20px; padding:0.25rem 0.6rem; font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted); cursor:pointer; transition:all 0.15s; margin-left:auto; }
+    .delete-btn:hover { border-color:#e53935; color:#e53935; }
 
-    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
-    .empty-state .big { font-size: 2.5rem; margin-bottom: 0.8rem; }
-    .empty-state p { font-size: 0.78rem; }
-    .loading-state { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.05em; }
+    mark { background:rgba(200,146,42,0.25); color:inherit; border-radius:2px; padding:0 1px; }
+    .empty-state { text-align:center; padding:3rem 1rem; color:var(--muted); }
+    .empty-state .big { font-size:2.5rem; margin-bottom:0.8rem; }
+    .empty-state p { font-size:0.78rem; }
+    .loading-state { text-align:center; padding:2rem; color:var(--muted); font-size:0.78rem; }
 
-    footer { text-align: center; margin-top: 4rem; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    footer { text-align:center; margin-top:4rem; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
 
-    @media(max-width:480px) {
-      .stats-bar{gap:1rem} .stat-num{font-size:1.4rem}
-      .top-bar{justify-content:center}
-    }
+    @media(max-width:480px) { .stats-bar{gap:1rem} .stat-num{font-size:1.4rem} .top-bar{justify-content:center} }
   </style>
 </head>
 <body>
 <div class="wrapper">
 
-  <!-- Top bar: theme switcher + dark mode -->
+  <!-- Top bar -->
   <div class="top-bar">
-    <span class="theme-label">Theme</span>
-    <div class="swatches">
-      <div class="swatch active" data-t="parchment" title="Parchment"></div>
-      <div class="swatch" data-t="forest" title="Forest"></div>
-      <div class="swatch" data-t="ocean" title="Ocean"></div>
-      <div class="swatch" data-t="rose" title="Rose"></div>
-      <div class="swatch" data-t="dark" title="Dark"></div>
+    <div class="top-left">
+      <span class="theme-label">Theme</span>
+      <div class="swatches">
+        <div class="swatch active" data-t="parchment" title="Parchment"></div>
+        <div class="swatch" data-t="forest" title="Forest"></div>
+        <div class="swatch" data-t="ocean" title="Ocean"></div>
+        <div class="swatch" data-t="rose" title="Rose"></div>
+        <div class="swatch" data-t="dark" title="Dark"></div>
+      </div>
+      <button class="dark-toggle" id="dark-toggle">
+        <span id="toggle-icon">🌙</span>
+        <span id="toggle-label">Dark</span>
+      </button>
     </div>
-    <button class="dark-toggle" id="dark-toggle">
-      <span class="toggle-icon">🌙</span>
-      <span id="toggle-label">Dark</span>
-    </button>
+    <div id="auth-area">
+      <button class="auth-btn" id="open-auth">✦ Sign in</button>
+    </div>
   </div>
 
   <header>
@@ -269,36 +300,12 @@
     <div class="stat"><span class="stat-num" id="stat-likes">—</span><span class="stat-label">Total likes</span></div>
   </div>
 
-  <div class="form-card">
+  <!-- Write form -->
+  <div class="form-card" id="form-card">
     <h2>Write an entry</h2>
-    <div class="field">
-      <label for="name">Your name</label>
-      <input type="text" id="name" placeholder="e.g. Ada Lovelace" maxlength="60" autocomplete="off" />
+    <div id="form-body">
+      <!-- filled by JS based on auth state -->
     </div>
-    <div class="field">
-      <label>Your mood</label>
-      <div class="mood-picker" id="mood-picker">
-        <button class="mood-btn selected" data-mood="✨">✨</button>
-        <button class="mood-btn" data-mood="😊">😊</button>
-        <button class="mood-btn" data-mood="🎉">🎉</button>
-        <button class="mood-btn" data-mood="💭">💭</button>
-        <button class="mood-btn" data-mood="🌙">🌙</button>
-        <button class="mood-btn" data-mood="🔥">🔥</button>
-        <button class="mood-btn" data-mood="💙">💙</button>
-        <button class="mood-btn" data-mood="🌿">🌿</button>
-        <button class="mood-btn" data-mood="👋">👋</button>
-        <button class="mood-btn" data-mood="🤔">🤔</button>
-      </div>
-    </div>
-    <div class="field">
-      <label for="message">Your message</label>
-      <textarea id="message" placeholder="Say something kind, curious, or memorable…" maxlength="300"></textarea>
-      <div class="char-count"><span id="char-num">0</span> / 300</div>
-    </div>
-    <button type="submit" id="submit-btn">
-      <span class="spinner"></span>
-      <span id="btn-text">Sign the book</span>
-    </button>
     <div class="toast" id="toast"></div>
   </div>
 
@@ -321,29 +328,36 @@
 
   <div id="entries-list"><div class="loading-state">Loading entries…</div></div>
 
-  <footer>Built with ✦ Supabase &amp; hosted on GitHub Pages</footer>
+  <footer>Built with ✦ Supabase Auth · hosted on GitHub Pages</footer>
+</div>
+
+<!-- Auth Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" id="modal-close">✕</button>
+    <h2 id="modal-title">Welcome back</h2>
+    <p id="modal-desc">Sign in to leave your mark in the guestbook.</p>
+    <div class="modal-error" id="modal-error"></div>
+    <div id="modal-fields"></div>
+    <button class="modal-submit" id="modal-submit">Sign in</button>
+    <div class="modal-switch" id="modal-switch"></div>
+  </div>
 </div>
 
 <script>
-  const EDGE_FN  = 'https://cwvjswcqxsdhsbbbhpyo.supabase.co/functions/v1/guestbook';
+  const BASE     = 'https://cwvjswcqxsdhsbbbhpyo.supabase.co/functions/v1/guestbook';
   const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3dmpzd2NxeHNkaHNiYmJocHlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjg1OTAsImV4cCI6MjA4ODc0NDU5MH0.L7vQpgdJNwQTbURUx8TfHVxJuOs47NvdNUdwLca_Ynk';
-  const AUTH     = { 'Authorization': 'Bearer ' + ANON_KEY };
+  const AUTH_HDR = { 'Authorization': 'Bearer ' + ANON_KEY };
 
-  const nameEl   = document.getElementById('name');
-  const msgEl    = document.getElementById('message');
-  const submitBtn= document.getElementById('submit-btn');
-  const btnText  = document.getElementById('btn-text');
-  const toast    = document.getElementById('toast');
-  const list     = document.getElementById('entries-list');
-  const countEl  = document.getElementById('entry-count');
-  const charNum  = document.getElementById('char-num');
-  const searchEl = document.getElementById('search');
-
+  // ── STATE ──
+  let session      = JSON.parse(localStorage.getItem('gb_session') || 'null');
+  let currentUser  = JSON.parse(localStorage.getItem('gb_user') || 'null');
   let allEntries   = [];
   let sortMode     = 'newest';
   let selectedMood = '✨';
   let likedIds     = JSON.parse(localStorage.getItem('gb_likes') || '[]');
-  let pinnedIds    = JSON.parse(localStorage.getItem('gb_pins') || '[]');
+  let pinnedIds    = JSON.parse(localStorage.getItem('gb_pins')  || '[]');
+  let modalMode    = 'signin'; // 'signin' | 'signup'
 
   // ── THEME ──
   const savedTheme = localStorage.getItem('gb_theme') || 'parchment';
@@ -355,58 +369,15 @@
     localStorage.setItem('gb_theme', t);
     isDark = t === 'dark';
     document.getElementById('toggle-label').textContent = isDark ? 'Light' : 'Dark';
-    document.querySelector('.toggle-icon').textContent = isDark ? '☀️' : '🌙';
+    document.getElementById('toggle-icon').textContent  = isDark ? '☀️' : '🌙';
     document.querySelectorAll('.swatch').forEach(s => s.classList.toggle('active', s.dataset.t === t));
   }
-
-  document.querySelectorAll('.swatch').forEach(sw => {
-    sw.addEventListener('click', () => applyTheme(sw.dataset.t));
-  });
-
-  document.getElementById('dark-toggle').addEventListener('click', () => {
-    applyTheme(isDark ? 'parchment' : 'dark');
-  });
-
-  // ── MOOD ──
-  document.getElementById('mood-picker').addEventListener('click', e => {
-    const btn = e.target.closest('.mood-btn');
-    if (!btn) return;
-    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    selectedMood = btn.dataset.mood;
-  });
-
-  msgEl.addEventListener('input', () => { charNum.textContent = msgEl.value.length; });
-
-  // ── SORT ──
-  document.querySelectorAll('.sort-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      sortMode = tab.dataset.sort;
-      renderFiltered();
-    });
-  });
-
-  searchEl.addEventListener('input', renderFiltered);
-
-  // ── AVATAR ──
-  const AVATAR_COLORS = [
-    ['#b5451b','#1a1208'],['#2a5aaa','#eef2f8'],['#4a7c3f','#f0f4ee'],
-    ['#c04060','#fdf0f4'],['#7a5aaa','#f4f0fd'],['#c8922a','#1a1208'],
-    ['#2a9a8a','#eefaf8'],['#8a4a2a','#fdf4ee'],
-  ];
-  function getAvatar(name) {
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    const [bg, fg] = AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
-    const initials = name.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0,2);
-    return { bg, fg, initials };
-  }
+  document.querySelectorAll('.swatch').forEach(sw => sw.addEventListener('click', () => applyTheme(sw.dataset.t)));
+  document.getElementById('dark-toggle').addEventListener('click', () => applyTheme(isDark ? 'parchment' : 'dark'));
 
   // ── HELPERS ──
   const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const hi  = (str, q) => !q ? esc(str) : esc(str).replace(new RegExp('('+esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>');
+  const hi  = (str,q) => !q ? esc(str) : esc(str).replace(new RegExp('('+esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>');
 
   function timeAgo(d) {
     const s = Math.floor((Date.now()-new Date(d))/1000);
@@ -418,37 +389,219 @@
   }
 
   function showToast(msg, type) {
-    toast.textContent = msg; toast.className = 'toast '+type;
-    setTimeout(() => { toast.className = 'toast'; }, 4000);
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = 'toast '+type;
+    setTimeout(() => { t.className='toast'; }, 4000);
   }
 
+  const AVATAR_COLORS = [
+    ['#b5451b','#fdfaf4'],['#2a5aaa','#eef2f8'],['#4a7c3f','#f0f4ee'],
+    ['#c04060','#fdf0f4'],['#7a5aaa','#f4f0fd'],['#c8922a','#1a1208'],
+    ['#2a9a8a','#eefaf8'],['#8a4a2a','#fdf4ee'],
+  ];
+  function getAvatar(name) {
+    let h = 0;
+    for (let i=0;i<name.length;i++) h = name.charCodeAt(i)+((h<<5)-h);
+    const [bg,fg] = AVATAR_COLORS[Math.abs(h)%AVATAR_COLORS.length];
+    const initials = name.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    return { bg, fg, initials };
+  }
+
+  // ── AUTH UI ──
+  function renderAuthArea() {
+    const area = document.getElementById('auth-area');
+    if (currentUser) {
+      const { bg, fg, initials } = getAvatar(currentUser.display_name || currentUser.email || 'U');
+      area.innerHTML = `
+        <div class="user-pill">
+          <div class="mini-avatar" style="background:${bg};color:${fg}">${initials}</div>
+          <span>${esc(currentUser.display_name || currentUser.email)}</span>
+          <button class="signout-btn" id="signout-btn">Sign out</button>
+        </div>`;
+      document.getElementById('signout-btn').addEventListener('click', signOut);
+    } else {
+      area.innerHTML = `<button class="auth-btn" id="open-auth">✦ Sign in</button>`;
+      document.getElementById('open-auth').addEventListener('click', () => openModal('signin'));
+    }
+    renderFormBody();
+  }
+
+  function renderFormBody() {
+    const body = document.getElementById('form-body');
+    if (!currentUser) {
+      body.innerHTML = `<div class="login-prompt">✦ <strong id="login-link">Sign in or create an account</strong> to leave a note in the guestbook.</div>`;
+      document.getElementById('login-link').addEventListener('click', () => openModal('signin'));
+      return;
+    }
+    body.innerHTML = `
+      <div class="field">
+        <label>Your mood</label>
+        <div class="mood-picker" id="mood-picker">
+          <button class="mood-btn selected" data-mood="✨">✨</button>
+          <button class="mood-btn" data-mood="😊">😊</button>
+          <button class="mood-btn" data-mood="🎉">🎉</button>
+          <button class="mood-btn" data-mood="💭">💭</button>
+          <button class="mood-btn" data-mood="🌙">🌙</button>
+          <button class="mood-btn" data-mood="🔥">🔥</button>
+          <button class="mood-btn" data-mood="💙">💙</button>
+          <button class="mood-btn" data-mood="🌿">🌿</button>
+          <button class="mood-btn" data-mood="👋">👋</button>
+          <button class="mood-btn" data-mood="🤔">🤔</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="message">Your message</label>
+        <textarea id="message" placeholder="Say something kind, curious, or memorable…" maxlength="300"></textarea>
+        <div class="char-count"><span id="char-num">0</span> / 300</div>
+      </div>
+      <button type="submit" id="submit-btn">
+        <span class="spinner"></span>
+        <span id="btn-text">Sign the book</span>
+      </button>`;
+
+    document.getElementById('message').addEventListener('input', e => {
+      document.getElementById('char-num').textContent = e.target.value.length;
+    });
+    document.getElementById('mood-picker').addEventListener('click', e => {
+      const btn = e.target.closest('.mood-btn');
+      if (!btn) return;
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedMood = btn.dataset.mood;
+    });
+    document.getElementById('submit-btn').addEventListener('click', submitEntry);
+  }
+
+  // ── MODAL ──
+  function openModal(mode) {
+    modalMode = mode;
+    const overlay = document.getElementById('modal-overlay');
+    const title   = document.getElementById('modal-title');
+    const desc    = document.getElementById('modal-desc');
+    const fields  = document.getElementById('modal-fields');
+    const submit  = document.getElementById('modal-submit');
+    const sw      = document.getElementById('modal-switch');
+    const err     = document.getElementById('modal-error');
+
+    err.classList.remove('show');
+    err.textContent = '';
+
+    if (mode === 'signin') {
+      title.textContent = 'Welcome back';
+      desc.textContent  = 'Sign in to leave your mark in the guestbook.';
+      submit.textContent = 'Sign in';
+      fields.innerHTML = `
+        <div class="field"><label>Email</label><input type="email" id="m-email" placeholder="you@example.com" /></div>
+        <div class="field"><label>Password</label><input type="password" id="m-pass" placeholder="••••••••" /></div>`;
+      sw.innerHTML = `No account? <span id="sw-link">Create one</span>`;
+    } else {
+      title.textContent = 'Join the guestbook';
+      desc.textContent  = 'Create an account to sign your name forever.';
+      submit.textContent = 'Create account';
+      fields.innerHTML = `
+        <div class="field"><label>Display name</label><input type="text" id="m-name" placeholder="e.g. Ada Lovelace" maxlength="60" /></div>
+        <div class="field"><label>Email</label><input type="email" id="m-email" placeholder="you@example.com" /></div>
+        <div class="field"><label>Password</label><input type="password" id="m-pass" placeholder="min. 6 characters" /></div>`;
+      sw.innerHTML = `Already have an account? <span id="sw-link">Sign in</span>`;
+    }
+
+    document.getElementById('sw-link').addEventListener('click', () => openModal(mode==='signin'?'signup':'signin'));
+    overlay.classList.add('open');
+
+    // Enter key submits
+    fields.querySelectorAll('input').forEach(inp => {
+      inp.addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('modal-submit').click(); });
+    });
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-overlay').addEventListener('click', e => { if(e.target.id==='modal-overlay') closeModal(); });
+
+  document.getElementById('modal-submit').addEventListener('click', async () => {
+    const btn = document.getElementById('modal-submit');
+    const err = document.getElementById('modal-error');
+    const email = document.getElementById('m-email')?.value.trim();
+    const pass  = document.getElementById('m-pass')?.value;
+    err.classList.remove('show');
+    btn.disabled = true;
+    btn.textContent = modalMode==='signin' ? 'Signing in…' : 'Creating account…';
+
+    try {
+      if (modalMode === 'signin') {
+        const res  = await fetch(BASE+'/signin', { method:'POST', headers:{...AUTH_HDR,'Content-Type':'application/json'}, body:JSON.stringify({email,password:pass}) });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        session = data.session;
+        currentUser = { ...data.user, display_name: data.display_name };
+        localStorage.setItem('gb_session', JSON.stringify(session));
+        localStorage.setItem('gb_user', JSON.stringify(currentUser));
+        closeModal();
+        renderAuthArea();
+        showToast(`Welcome back, ${data.display_name || email}! ✦`, 'success');
+      } else {
+        const name = document.getElementById('m-name')?.value.trim();
+        if (!name) throw new Error('Display name is required');
+        const res  = await fetch(BASE+'/signup', { method:'POST', headers:{...AUTH_HDR,'Content-Type':'application/json'}, body:JSON.stringify({email,password:pass,display_name:name}) });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        session = data.session;
+        currentUser = { ...data.user, display_name: name };
+        localStorage.setItem('gb_session', JSON.stringify(session));
+        localStorage.setItem('gb_user', JSON.stringify(currentUser));
+        closeModal();
+        renderAuthArea();
+        showToast(`Welcome, ${name}! Your account is ready ✦`, 'success');
+      }
+    } catch(e) {
+      err.textContent = e.message;
+      err.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = modalMode==='signin' ? 'Sign in' : 'Create account';
+    }
+  });
+
+  function signOut() {
+    session = null; currentUser = null;
+    localStorage.removeItem('gb_session');
+    localStorage.removeItem('gb_user');
+    renderAuthArea();
+    showToast('Signed out. See you next time!', 'success');
+  }
+
+  // ── ENTRIES ──
   function updateStats(entries) {
     const today = new Date().toDateString();
     document.getElementById('stat-total').textContent = entries.length;
-    document.getElementById('stat-today').textContent = entries.filter(e => new Date(e.created_at).toDateString()===today).length;
+    document.getElementById('stat-today').textContent = entries.filter(e=>new Date(e.created_at).toDateString()===today).length;
     document.getElementById('stat-likes').textContent = entries.reduce((s,e)=>s+(e.likes||0),0);
-    countEl.textContent = entries.length;
+    document.getElementById('entry-count').textContent = entries.length;
   }
 
   function renderFiltered() {
-    const q = searchEl.value.trim().toLowerCase();
+    const q = document.getElementById('search').value.trim().toLowerCase();
     let entries = allEntries.filter(e => !q || e.name.toLowerCase().includes(q) || e.message.toLowerCase().includes(q));
 
     if (sortMode==='newest')  entries.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
     if (sortMode==='oldest')  entries.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
     if (sortMode==='popular') entries.sort((a,b)=>(b.likes||0)-(a.likes||0));
-    if (sortMode==='pinned')  entries = entries.filter(e => e.pinned || pinnedIds.includes(e.id));
+    if (sortMode==='pinned')  entries = entries.filter(e=>e.pinned||pinnedIds.includes(e.id));
 
-    // Always show pinned on top for other sorts
-    if (sortMode !== 'pinned') {
-      entries.sort((a,b) => {
-        const ap = a.pinned || pinnedIds.includes(a.id) ? 1 : 0;
-        const bp = b.pinned || pinnedIds.includes(b.id) ? 1 : 0;
-        return bp - ap;
+    if (sortMode!=='pinned') {
+      entries.sort((a,b)=>{
+        const ap=a.pinned||pinnedIds.includes(a.id)?1:0;
+        const bp=b.pinned||pinnedIds.includes(b.id)?1:0;
+        return bp-ap;
       });
     }
 
+    const list = document.getElementById('entries-list');
     list.innerHTML = '';
+
     if (!entries.length) {
       list.innerHTML = sortMode==='pinned'
         ? `<div class="empty-state"><div class="big">📌</div><p>No pinned entries yet.</p></div>`
@@ -459,20 +612,22 @@
     }
 
     entries.forEach(e => {
-      const liked  = likedIds.includes(e.id);
+      const liked    = likedIds.includes(e.id);
       const isPinned = e.pinned || pinnedIds.includes(e.id);
+      const isOwn    = currentUser && e.user_id === currentUser.id;
       const { bg, fg, initials } = getAvatar(e.name);
       const card = document.createElement('div');
-      card.className = 'entry-card' + (isPinned ? ' pinned-card' : '');
+      card.className = 'entry-card'+(isPinned?' pinned-card':'');
       card.dataset.id = e.id;
       card.innerHTML = `
-        ${isPinned ? `<div class="pin-banner">📌 Featured entry</div>` : ''}
+        ${isPinned?`<div class="pin-banner">📌 Featured entry</div>`:''}
         <div class="entry-top">
-          <div class="avatar" style="background:${bg}; color:${fg}">
-            <span class="avatar-inner">${initials || '?'}</span>
-          </div>
+          <div class="avatar" style="background:${bg};color:${fg}">${initials||'?'}</div>
           <div class="entry-meta">
-            <div class="entry-name">${hi(e.name,q)}</div>
+            <div class="entry-name">
+              ${hi(e.name,q)}
+              ${isOwn?`<span class="yours-badge">you</span>`:''}
+            </div>
             <div class="entry-time">${esc(e.mood||'✨')} · ${timeAgo(e.created_at)}</div>
           </div>
         </div>
@@ -482,91 +637,117 @@
             <span class="heart">${liked?'❤️':'🤍'}</span>
             <span class="like-count">${e.likes||0}</span>
           </button>
-          <button class="pin-btn${isPinned?' pinned':''}" data-id="${e.id}" data-action="pin" title="${isPinned?'Unpin':'Pin this entry'}">
+          <button class="pin-btn${isPinned?' pinned':''}" data-id="${e.id}" data-action="pin">
             ${isPinned?'📌':'📍'} ${isPinned?'Unpin':'Pin'}
           </button>
+          ${isOwn?`<button class="delete-btn" data-id="${e.id}" data-action="delete">🗑 Delete</button>`:''}
         </div>`;
       list.appendChild(card);
     });
   }
 
-  // ── LIKE & PIN delegation ──
-  list.addEventListener('click', async e => {
-    const likeBtn = e.target.closest('.like-btn');
-    const pinBtn  = e.target.closest('.pin-btn');
+  document.getElementById('entries-list').addEventListener('click', async e => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const { id, action } = btn.dataset;
 
-    if (likeBtn) {
-      const id = likeBtn.dataset.id;
+    if (action === 'like') {
       if (likedIds.includes(id)) return;
       likedIds.push(id);
       localStorage.setItem('gb_likes', JSON.stringify(likedIds));
       const entry = allEntries.find(x=>x.id===id);
-      if (entry) {
-        entry.likes = (entry.likes||0)+1;
-        likeBtn.classList.add('liked');
-        likeBtn.querySelector('.heart').textContent = '❤️';
-        likeBtn.querySelector('.like-count').textContent = entry.likes;
-        updateStats(allEntries);
-      }
-      try { await fetch(`${EDGE_FN}?id=${id}`, { method:'PATCH', headers:AUTH }); } catch(_){}
+      if (entry) { entry.likes=(entry.likes||0)+1; updateStats(allEntries); }
+      btn.classList.add('liked');
+      btn.querySelector('.heart').textContent='❤️';
+      btn.querySelector('.like-count').textContent = entry?.likes||1;
+      try { await fetch(`${BASE}?id=${id}`, {method:'PATCH',headers:AUTH_HDR}); } catch(_){}
     }
 
-    if (pinBtn) {
-      const id = pinBtn.dataset.id;
-      const entry = allEntries.find(x=>x.id===id);
-      if (!entry) return;
-
-      // Optimistic toggle
-      const wasLocal = pinnedIds.includes(id);
-      if (wasLocal) {
-        pinnedIds = pinnedIds.filter(x=>x!==id);
-      } else {
-        pinnedIds.push(id);
-      }
+    if (action === 'pin') {
+      const wasPinned = pinnedIds.includes(id);
+      pinnedIds = wasPinned ? pinnedIds.filter(x=>x!==id) : [...pinnedIds, id];
       localStorage.setItem('gb_pins', JSON.stringify(pinnedIds));
-      // Also update server
+      const entry = allEntries.find(x=>x.id===id);
       try {
-        const res = await fetch(`${EDGE_FN}?id=${id}&action=pin`, { method:'PATCH', headers:AUTH });
+        const res  = await fetch(`${BASE}?id=${id}&action=pin`,{method:'PATCH',headers:AUTH_HDR});
         const data = await res.json();
-        if (data.pinned !== undefined) entry.pinned = data.pinned;
+        if (entry && data.pinned!==undefined) entry.pinned = data.pinned;
       } catch(_){}
       renderFiltered();
     }
+
+    if (action === 'delete') {
+      if (!currentUser || !session) return;
+      if (!confirm('Delete your entry? This cannot be undone.')) return;
+      try {
+        const res = await fetch(`${BASE}?id=${id}`, {
+          method:'DELETE',
+          headers:{ ...AUTH_HDR, 'x-user-token': session.access_token }
+        });
+        if (!res.ok) { const d=await res.json(); throw new Error(d.error); }
+        allEntries = allEntries.filter(x=>x.id!==id);
+        updateStats(allEntries);
+        renderFiltered();
+        showToast('Entry deleted.', 'success');
+      } catch(err) { showToast('Could not delete: '+err.message,'error'); }
+    }
   });
 
-  // ── LOAD ──
   async function loadEntries() {
     try {
-      const res = await fetch(EDGE_FN, { headers: AUTH });
+      const res = await fetch(BASE, {headers:AUTH_HDR});
       if (!res.ok) throw new Error();
       allEntries = await res.json();
       updateStats(allEntries);
       renderFiltered();
     } catch {
-      if (!allEntries.length) list.innerHTML = `<div class="empty-state"><p>Could not load entries.</p></div>`;
+      if (!allEntries.length) {
+        document.getElementById('entries-list').innerHTML = `<div class="empty-state"><p>Could not load entries.</p></div>`;
+      }
     }
   }
 
-  // ── SUBMIT ──
-  submitBtn.addEventListener('click', async () => {
-    const name = nameEl.value.trim(), message = msgEl.value.trim();
-    if (!name||!message) { showToast('Please fill in your name and message.','error'); return; }
-    submitBtn.disabled=true; submitBtn.classList.add('loading'); btnText.textContent='Signing…';
+  async function submitEntry() {
+    if (!currentUser || !session) { openModal('signin'); return; }
+    const msgEl = document.getElementById('message');
+    const message = msgEl?.value.trim();
+    if (!message) { showToast('Please write a message.','error'); return; }
+
+    const btn = document.getElementById('submit-btn');
+    const txt = document.getElementById('btn-text');
+    btn.disabled=true; btn.classList.add('loading'); txt.textContent='Signing…';
+
     try {
-      const res = await fetch(EDGE_FN, {
-        method:'POST', headers:{...AUTH,'Content-Type':'application/json'},
-        body: JSON.stringify({name, message, mood:selectedMood})
+      const res = await fetch(BASE, {
+        method:'POST',
+        headers:{ ...AUTH_HDR, 'Content-Type':'application/json', 'x-user-token': session.access_token },
+        body: JSON.stringify({ message, mood: selectedMood })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      nameEl.value=''; msgEl.value=''; charNum.textContent='0';
+      msgEl.value='';
+      document.getElementById('char-num').textContent='0';
       showToast('Your entry was added! ✦','success');
       loadEntries();
-    } catch { showToast('Something went wrong. Please try again.','error'); }
-    finally { submitBtn.disabled=false; submitBtn.classList.remove('loading'); btnText.textContent='Sign the book'; }
-  });
+    } catch(err) {
+      if (err.message?.includes('session')) { signOut(); openModal('signin'); }
+      else showToast('Something went wrong. Please try again.','error');
+    } finally {
+      btn.disabled=false; btn.classList.remove('loading'); txt.textContent='Sign the book';
+    }
+  }
 
-  nameEl.addEventListener('keydown', e => { if(e.key==='Enter'){e.preventDefault();submitBtn.click();} });
+  // ── SORT & SEARCH ──
+  document.querySelectorAll('.sort-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.sort-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active'); sortMode=tab.dataset.sort; renderFiltered();
+    });
+  });
+  document.getElementById('search').addEventListener('input', renderFiltered);
+
+  // ── BOOT ──
+  renderAuthArea();
   setInterval(loadEntries, 10000);
   loadEntries();
 </script>
