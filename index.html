@@ -532,7 +532,7 @@
 
     try {
       if (modalMode === 'signin') {
-        const res  = await fetch(BASE+'/signin', { method:'POST', headers:{...AUTH_HDR,'Content-Type':'application/json'}, body:JSON.stringify({email,password:pass}) });
+        const res  = await fetch(BASE, { method:'POST', headers:{...AUTH_HDR,'Content-Type':'application/json','x-action':'signin'}, body:JSON.stringify({email,password:pass}) });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
         session = data.session;
@@ -545,7 +545,7 @@
       } else {
         const name = document.getElementById('m-name')?.value.trim();
         if (!name) throw new Error('Display name is required');
-        const res  = await fetch(BASE+'/signup', { method:'POST', headers:{...AUTH_HDR,'Content-Type':'application/json'}, body:JSON.stringify({email,password:pass,display_name:name}) });
+        const res  = await fetch(BASE, { method:'POST', headers:{...AUTH_HDR,'Content-Type':'application/json','x-action':'signup'}, body:JSON.stringify({email,password:pass,display_name:name}) });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
         session = data.session;
