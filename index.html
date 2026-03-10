@@ -3,292 +3,151 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guestbook ✦</title>
+  <title>The Guestbook ✦</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --cream: #f5f0e8;
-      --ink: #1a1208;
-      --rust: #b5451b;
-      --gold: #c8922a;
-      --muted: #8a7f6e;
-      --card: #fdfaf4;
-      --border: #d9d0be;
+      --cream: #f5f0e8; --ink: #1a1208; --rust: #b5451b;
+      --gold: #c8922a; --muted: #8a7f6e; --card: #fdfaf4; --border: #d9d0be;
     }
-
     body {
-      background-color: var(--cream);
-      color: var(--ink);
-      font-family: 'DM Mono', monospace;
-      min-height: 100vh;
-      padding: 2rem 1rem 4rem;
+      background: var(--cream); color: var(--ink);
+      font-family: 'DM Mono', monospace; min-height: 100vh; padding: 2rem 1rem 4rem;
     }
-
-    /* Grain overlay */
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.5;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0.5;
     }
+    .wrapper { max-width: 680px; margin: 0 auto; }
 
-    .wrapper {
-      max-width: 680px;
-      margin: 0 auto;
-    }
+    /* HEADER */
+    header { text-align: center; padding: 3rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+    header::before { content: '✦  ✦  ✦'; display: block; font-size: 0.7rem; letter-spacing: 0.5em; color: var(--gold); margin-bottom: 1.2rem; }
+    h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem,6vw,3.8rem); font-weight: 700; line-height: 1.1; }
+    h1 em { font-style: italic; color: var(--rust); }
+    .subtitle { margin-top: 0.8rem; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
 
-    header {
-      text-align: center;
-      padding: 3rem 0 2.5rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 2.5rem;
-      position: relative;
+    /* STATS */
+    .stats-bar {
+      display: flex; justify-content: center; gap: 2rem;
+      margin: 0 0 2rem; padding: 1.2rem;
+      border: 1px solid var(--border); background: var(--card); border-radius: 2px;
     }
-
-    header::before {
-      content: '✦  ✦  ✦';
-      display: block;
-      font-size: 0.7rem;
-      letter-spacing: 0.5em;
-      color: var(--gold);
-      margin-bottom: 1.2rem;
-    }
-
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.4rem, 6vw, 3.8rem);
-      font-weight: 700;
-      line-height: 1.1;
-      color: var(--ink);
-    }
-
-    h1 em {
-      font-style: italic;
-      color: var(--rust);
-    }
-
-    .subtitle {
-      margin-top: 0.8rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+    .stat { text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--rust); display: block; }
+    .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
 
     /* FORM */
     .form-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 2rem 2rem 1.8rem;
-      margin-bottom: 2.5rem;
-      box-shadow: 3px 3px 0 var(--border);
+      background: var(--card); border: 1px solid var(--border); border-radius: 2px;
+      padding: 2rem 2rem 1.8rem; margin-bottom: 2rem; box-shadow: 3px 3px 0 var(--border);
     }
-
-    .form-card h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-      margin-bottom: 1.4rem;
-      color: var(--ink);
-    }
-
-    .field {
-      margin-bottom: 1.1rem;
-    }
-
-    label {
-      display: block;
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-
+    .form-card h2 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 1.4rem; }
+    .field { margin-bottom: 1.1rem; }
+    label { display: block; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
     input, textarea {
-      width: 100%;
-      background: var(--cream);
-      border: 1px solid var(--border);
-      border-radius: 1px;
-      padding: 0.65rem 0.9rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.85rem;
-      color: var(--ink);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-      resize: vertical;
+      width: 100%; background: var(--cream); border: 1px solid var(--border); border-radius: 1px;
+      padding: 0.65rem 0.9rem; font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--ink);
+      transition: border-color 0.2s, box-shadow 0.2s; outline: none;
     }
+    textarea { resize: vertical; min-height: 90px; }
+    input:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,146,42,0.12); }
 
-    input:focus, textarea:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200, 146, 42, 0.12);
+    /* MOOD */
+    .mood-picker { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.4rem; }
+    .mood-btn {
+      background: var(--cream); border: 1px solid var(--border); border-radius: 2px;
+      padding: 0.38rem 0.55rem; font-size: 1.15rem; cursor: pointer;
+      transition: all 0.15s; line-height: 1;
     }
+    .mood-btn:hover { border-color: var(--gold); transform: scale(1.1); }
+    .mood-btn.selected { border-color: var(--rust); background: #fdf0ed; box-shadow: 0 0 0 2px rgba(181,69,27,0.15); transform: scale(1.15); }
 
-    textarea { min-height: 90px; }
-
-    .char-count {
-      font-size: 0.62rem;
-      color: var(--muted);
-      text-align: right;
-      margin-top: 0.3rem;
-    }
+    .char-count { font-size: 0.62rem; color: var(--muted); text-align: right; margin-top: 0.3rem; }
 
     button[type="submit"] {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1.2rem;
-      background: var(--ink);
-      color: var(--cream);
-      border: none;
-      padding: 0.75rem 1.6rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.78rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      border-radius: 1px;
-      transition: background 0.2s, transform 0.1s;
+      display: flex; align-items: center; gap: 0.5rem; margin-top: 1.2rem;
+      background: var(--ink); color: var(--cream); border: none; padding: 0.75rem 1.6rem;
+      font-family: 'DM Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em;
+      text-transform: uppercase; cursor: pointer; border-radius: 1px; transition: background 0.2s, transform 0.1s;
     }
-
     button[type="submit"]:hover { background: var(--rust); }
     button[type="submit"]:active { transform: translateY(1px); }
     button[type="submit"]:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .spinner {
-      width: 12px; height: 12px;
-      border: 2px solid rgba(245,240,232,0.4);
-      border-top-color: var(--cream);
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      display: none;
+      width: 12px; height: 12px; border: 2px solid rgba(245,240,232,0.4);
+      border-top-color: var(--cream); border-radius: 50%;
+      animation: spin 0.6s linear infinite; display: none;
     }
     .loading .spinner { display: block; }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .toast {
-      font-size: 0.75rem;
-      padding: 0.5rem 0.8rem;
-      border-radius: 1px;
-      margin-top: 0.8rem;
-      display: none;
-    }
+    .toast { font-size: 0.75rem; padding: 0.5rem 0.8rem; border-radius: 1px; margin-top: 0.8rem; display: none; }
     .toast.success { background: #eef6ee; color: #2d6a2d; border: 1px solid #b5d6b5; display: block; }
-    .toast.error { background: #fdf0ed; color: #9b2b1c; border: 1px solid #f0b8ad; display: block; }
+    .toast.error   { background: #fdf0ed; color: #9b2b1c; border: 1px solid #f0b8ad; display: block; }
 
-    /* ENTRIES */
-    .entries-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 1.2rem;
+    /* ENTRIES CONTROLS */
+    .entries-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap; }
+    .entries-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+    .count-badge { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+    .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #4caf50; margin-right: 5px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .search-bar { width: 100%; margin-bottom: 1rem; position: relative; }
+    .search-bar input { padding-left: 2.2rem; font-size: 0.8rem; }
+    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem; pointer-events: none; }
+
+    .sort-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; }
+    .sort-tab {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0.35rem 0.75rem; border: 1px solid var(--border);
+      background: transparent; color: var(--muted); cursor: pointer; border-radius: 1px; transition: all 0.15s;
     }
+    .sort-tab:hover { border-color: var(--gold); color: var(--ink); }
+    .sort-tab.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
 
-    .entries-header h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem;
-    }
-
-    .count-badge {
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .live-dot {
-      display: inline-block;
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: #4caf50;
-      margin-right: 5px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    #entries-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
+    /* ENTRY CARDS */
+    #entries-list { display: flex; flex-direction: column; gap: 1rem; }
     .entry-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 1.2rem 1.4rem;
-      position: relative;
-      animation: fadeSlide 0.4s ease both;
+      background: var(--card); border: 1px solid var(--border); border-radius: 2px;
+      padding: 1.2rem 1.4rem 1rem; position: relative;
+      animation: fadeSlide 0.4s ease both; transition: box-shadow 0.2s;
     }
+    .entry-card:hover { box-shadow: 3px 3px 0 var(--border); }
+    @keyframes fadeSlide { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
 
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(-8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .entry-top { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .entry-mood { font-size: 1.6rem; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+    .entry-meta { flex: 1; }
+    .entry-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; }
+    .entry-time { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.05em; margin-top: 0.15rem; }
+    .entry-message { font-size: 0.82rem; line-height: 1.65; color: #3a3022; margin-left: 2.35rem; }
+    .entry-footer { display: flex; align-items: center; margin-top: 0.8rem; margin-left: 2.35rem; }
 
-    .entry-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 0.45rem;
+    .like-btn {
+      display: flex; align-items: center; gap: 0.35rem; background: none;
+      border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.65rem;
+      font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted);
+      cursor: pointer; transition: all 0.15s; letter-spacing: 0.05em;
     }
+    .like-btn:hover { border-color: var(--rust); color: var(--rust); }
+    .like-btn.liked { background: #fdf0ed; border-color: var(--rust); color: var(--rust); }
+    .like-btn .heart { font-size: 0.8rem; }
 
-    .entry-message {
-      font-size: 0.82rem;
-      line-height: 1.65;
-      color: #3a3022;
-    }
+    .entry-ornament { position: absolute; top: 1rem; right: 1.2rem; font-size: 0.75rem; color: var(--gold); opacity: 0.4; }
 
-    .entry-time {
-      font-size: 0.6rem;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-      margin-top: 0.8rem;
-    }
+    mark { background: rgba(200,146,42,0.25); color: inherit; border-radius: 2px; padding: 0 1px; }
 
-    .entry-ornament {
-      position: absolute;
-      top: 1rem; right: 1.2rem;
-      font-size: 0.75rem;
-      color: var(--gold);
-      opacity: 0.5;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: var(--muted);
-    }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
     .empty-state .big { font-size: 2.5rem; margin-bottom: 0.8rem; }
     .empty-state p { font-size: 0.78rem; }
+    .loading-state { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.05em; }
 
-    .loading-state {
-      text-align: center;
-      padding: 2rem;
-      color: var(--muted);
-      font-size: 0.78rem;
-      letter-spacing: 0.05em;
-    }
+    footer { text-align: center; margin-top: 4rem; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
 
-    footer {
-      text-align: center;
-      margin-top: 4rem;
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    footer a { color: var(--gold); text-decoration: none; }
+    @media(max-width:480px) { .stats-bar{gap:1rem} .stat-num{font-size:1.4rem} }
   </style>
 </head>
 <body>
@@ -299,12 +158,32 @@
     <p class="subtitle">Leave a note for the world to see</p>
   </header>
 
-  <!-- Form -->
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total entries</span></div>
+    <div class="stat"><span class="stat-num" id="stat-today">—</span><span class="stat-label">Today</span></div>
+    <div class="stat"><span class="stat-num" id="stat-likes">—</span><span class="stat-label">Total likes</span></div>
+  </div>
+
   <div class="form-card">
     <h2>Write an entry</h2>
     <div class="field">
       <label for="name">Your name</label>
       <input type="text" id="name" placeholder="e.g. Ada Lovelace" maxlength="60" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label>Your mood</label>
+      <div class="mood-picker" id="mood-picker">
+        <button class="mood-btn selected" data-mood="✨">✨</button>
+        <button class="mood-btn" data-mood="😊">😊</button>
+        <button class="mood-btn" data-mood="🎉">🎉</button>
+        <button class="mood-btn" data-mood="💭">💭</button>
+        <button class="mood-btn" data-mood="🌙">🌙</button>
+        <button class="mood-btn" data-mood="🔥">🔥</button>
+        <button class="mood-btn" data-mood="💙">💙</button>
+        <button class="mood-btn" data-mood="🌿">🌿</button>
+        <button class="mood-btn" data-mood="👋">👋</button>
+        <button class="mood-btn" data-mood="🤔">🤔</button>
+      </div>
     </div>
     <div class="field">
       <label for="message">Your message</label>
@@ -318,158 +197,192 @@
     <div class="toast" id="toast"></div>
   </div>
 
-  <!-- Entries -->
   <div class="entries-header">
     <h2>Entries</h2>
     <span class="count-badge"><span class="live-dot"></span>Live · <span id="entry-count">—</span> notes</span>
   </div>
 
-  <div id="entries-list">
-    <div class="loading-state">Loading entries…</div>
+  <div class="search-bar">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="search" placeholder="Search by name or message…" />
   </div>
 
-  <footer>
-    Built with ✦ Supabase &amp; hosted on GitHub Pages
-  </footer>
+  <div class="sort-tabs">
+    <button class="sort-tab active" data-sort="newest">Newest</button>
+    <button class="sort-tab" data-sort="oldest">Oldest</button>
+    <button class="sort-tab" data-sort="popular">Most liked</button>
+  </div>
+
+  <div id="entries-list"><div class="loading-state">Loading entries…</div></div>
+
+  <footer>Built with ✦ Supabase &amp; hosted on GitHub Pages</footer>
 </div>
 
-<!-- Supabase JS v2 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/supabase/2.50.0/supabase.min.js"></script>
 <script>
-  const SUPABASE_URL = 'https://cwvjswcqxsdhsbbbhpyo.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3dmpzd2NxeHNkaHNiYmJocHlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjg1OTAsImV4cCI6MjA4ODc0NDU5MH0.L7vQpgdJNwQTbURUx8TfHVxJuOs47NvdNUdwLca_Ynk';
+  const EDGE_FN  = 'https://cwvjswcqxsdhsbbbhpyo.supabase.co/functions/v1/guestbook';
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3dmpzd2NxeHNkaHNiYmJocHlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNjg1OTAsImV4cCI6MjA4ODc0NDU5MH0.L7vQpgdJNwQTbURUx8TfHVxJuOs47NvdNUdwLca_Ynk';
+  const AUTH     = { 'Authorization': 'Bearer ' + ANON_KEY };
 
-  const { createClient } = supabase;
-  const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const nameEl   = document.getElementById('name');
+  const msgEl    = document.getElementById('message');
+  const submitBtn= document.getElementById('submit-btn');
+  const btnText  = document.getElementById('btn-text');
+  const toast    = document.getElementById('toast');
+  const list     = document.getElementById('entries-list');
+  const countEl  = document.getElementById('entry-count');
+  const charNum  = document.getElementById('char-num');
+  const searchEl = document.getElementById('search');
 
-  const nameEl    = document.getElementById('name');
-  const msgEl     = document.getElementById('message');
-  const submitBtn = document.getElementById('submit-btn');
-  const btnText   = document.getElementById('btn-text');
-  const toast     = document.getElementById('toast');
-  const list      = document.getElementById('entries-list');
-  const countEl   = document.getElementById('entry-count');
-  const charNum   = document.getElementById('char-num');
+  let allEntries   = [];
+  let sortMode     = 'newest';
+  let selectedMood = '✨';
+  let likedIds     = JSON.parse(localStorage.getItem('gb_likes') || '[]');
 
-  msgEl.addEventListener('input', () => {
-    charNum.textContent = msgEl.value.length;
+  // Mood picker
+  document.getElementById('mood-picker').addEventListener('click', e => {
+    const btn = e.target.closest('.mood-btn');
+    if (!btn) return;
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedMood = btn.dataset.mood;
   });
 
-  const ornaments = ['✦', '◆', '❧', '✿', '◈', '※', '✤'];
-  function randomOrnament() {
-    return ornaments[Math.floor(Math.random() * ornaments.length)];
+  msgEl.addEventListener('input', () => { charNum.textContent = msgEl.value.length; });
+
+  document.querySelectorAll('.sort-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      sortMode = tab.dataset.sort;
+      renderFiltered();
+    });
+  });
+
+  searchEl.addEventListener('input', renderFiltered);
+
+  const ornaments = ['✦','◆','❧','✿','◈','※','✤'];
+  const rnd = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  function timeAgo(d) {
+    const s = Math.floor((Date.now() - new Date(d)) / 1000);
+    if (s < 60) return 'just now';
+    if (s < 3600) return Math.floor(s/60) + 'm ago';
+    if (s < 86400) return Math.floor(s/3600) + 'h ago';
+    if (s < 604800) return Math.floor(s/86400) + 'd ago';
+    return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   }
 
-  function timeAgo(dateStr) {
-    const now = new Date();
-    const then = new Date(dateStr);
-    const diff = Math.floor((now - then) / 1000);
-    if (diff < 60)   return 'just now';
-    if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
-    if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
-    return then.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-  }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  function renderEntry(entry, prepend = false) {
-    const card = document.createElement('div');
-    card.className = 'entry-card';
-    card.dataset.id = entry.id;
-    card.innerHTML = `
-      <span class="entry-ornament">${randomOrnament()}</span>
-      <div class="entry-name">${escHtml(entry.name)}</div>
-      <div class="entry-message">${escHtml(entry.message)}</div>
-      <div class="entry-time">${timeAgo(entry.created_at)}</div>
-    `;
-    if (prepend) {
-      list.insertBefore(card, list.firstChild);
-    } else {
-      list.appendChild(card);
-    }
-  }
-
-  function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  function hi(str, q) {
+    if (!q) return esc(str);
+    return esc(str).replace(new RegExp('(' + esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')','gi'),'<mark>$1</mark>');
   }
 
   function showToast(msg, type) {
-    toast.textContent = msg;
-    toast.className = `toast ${type}`;
+    toast.textContent = msg; toast.className = 'toast ' + type;
     setTimeout(() => { toast.className = 'toast'; }, 4000);
   }
 
-  async function loadEntries() {
-    const { data, error } = await sb
-      .from('guestbook')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(50);
-
-    list.innerHTML = '';
-
-    if (error) {
-      list.innerHTML = `<div class="empty-state"><p>Could not load entries.</p></div>`;
-      return;
-    }
-
-    countEl.textContent = data.length;
-
-    if (data.length === 0) {
-      list.innerHTML = `
-        <div class="empty-state">
-          <div class="big">✦</div>
-          <p>No entries yet — be the first to sign!</p>
-        </div>`;
-      return;
-    }
-
-    data.forEach(e => renderEntry(e, false));
+  function updateStats(entries) {
+    const today = new Date().toDateString();
+    document.getElementById('stat-total').textContent = entries.length;
+    document.getElementById('stat-today').textContent = entries.filter(e => new Date(e.created_at).toDateString() === today).length;
+    document.getElementById('stat-likes').textContent = entries.reduce((s,e) => s + (e.likes||0), 0);
+    countEl.textContent = entries.length;
   }
 
-  // Realtime subscription
-  sb.channel('guestbook-changes')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'guestbook' }, payload => {
-      const emptyState = list.querySelector('.empty-state');
-      if (emptyState) list.innerHTML = '';
-      renderEntry(payload.new, true);
-      const current = parseInt(countEl.textContent) || 0;
-      countEl.textContent = current + 1;
-    })
-    .subscribe();
+  function renderFiltered() {
+    const q = searchEl.value.trim().toLowerCase();
+    let entries = allEntries.filter(e => !q || e.name.toLowerCase().includes(q) || e.message.toLowerCase().includes(q));
+    if (sortMode === 'newest')  entries.sort((a,b) => new Date(b.created_at)-new Date(a.created_at));
+    if (sortMode === 'oldest')  entries.sort((a,b) => new Date(a.created_at)-new Date(b.created_at));
+    if (sortMode === 'popular') entries.sort((a,b) => (b.likes||0)-(a.likes||0));
 
-  submitBtn.addEventListener('click', async () => {
-    const name = nameEl.value.trim();
-    const message = msgEl.value.trim();
-
-    if (!name || !message) {
-      showToast('Please fill in your name and message.', 'error');
+    list.innerHTML = '';
+    if (!entries.length) {
+      list.innerHTML = q
+        ? `<div class="empty-state"><div class="big">🔍</div><p>No entries match "<strong>${esc(q)}</strong>"</p></div>`
+        : `<div class="empty-state"><div class="big">✦</div><p>No entries yet — be the first to sign!</p></div>`;
       return;
     }
+    entries.forEach(e => {
+      const liked = likedIds.includes(e.id);
+      const card = document.createElement('div');
+      card.className = 'entry-card';
+      card.dataset.id = e.id;
+      card.innerHTML = `
+        <span class="entry-ornament">${rnd(ornaments)}</span>
+        <div class="entry-top">
+          <div class="entry-mood">${esc(e.mood||'✨')}</div>
+          <div class="entry-meta">
+            <div class="entry-name">${hi(e.name,q)}</div>
+            <div class="entry-time">${timeAgo(e.created_at)}</div>
+          </div>
+        </div>
+        <div class="entry-message">${hi(e.message,q)}</div>
+        <div class="entry-footer">
+          <button class="like-btn${liked?' liked':''}" data-id="${e.id}">
+            <span class="heart">${liked?'❤️':'🤍'}</span>
+            <span class="like-count">${e.likes||0}</span>
+          </button>
+        </div>`;
+      list.appendChild(card);
+    });
+  }
 
-    submitBtn.disabled = true;
-    submitBtn.classList.add('loading');
-    btnText.textContent = 'Signing…';
+  list.addEventListener('click', async e => {
+    const btn = e.target.closest('.like-btn');
+    if (!btn || likedIds.includes(btn.dataset.id)) return;
+    const id = btn.dataset.id;
+    likedIds.push(id);
+    localStorage.setItem('gb_likes', JSON.stringify(likedIds));
+    const entry = allEntries.find(x => x.id === id);
+    if (entry) {
+      entry.likes = (entry.likes||0)+1;
+      btn.classList.add('liked');
+      btn.querySelector('.heart').textContent = '❤️';
+      btn.querySelector('.like-count').textContent = entry.likes;
+      updateStats(allEntries);
+    }
+    try { await fetch(`${EDGE_FN}?id=${id}`, { method:'PATCH', headers:AUTH }); } catch(_){}
+  });
 
-    const { error } = await sb.from('guestbook').insert({ name, message });
+  async function loadEntries() {
+    try {
+      const res = await fetch(EDGE_FN, { headers: AUTH });
+      if (!res.ok) throw new Error();
+      allEntries = await res.json();
+      updateStats(allEntries);
+      renderFiltered();
+    } catch {
+      if (!allEntries.length) list.innerHTML = `<div class="empty-state"><p>Could not load entries.</p></div>`;
+    }
+  }
 
-    submitBtn.disabled = false;
-    submitBtn.classList.remove('loading');
-    btnText.textContent = 'Sign the book';
-
-    if (error) {
-      showToast('Something went wrong. Please try again.', 'error');
-    } else {
-      nameEl.value = '';
-      msgEl.value = '';
-      charNum.textContent = '0';
-      showToast('Your entry was added!', 'success');
+  submitBtn.addEventListener('click', async () => {
+    const name = nameEl.value.trim(), message = msgEl.value.trim();
+    if (!name || !message) { showToast('Please fill in your name and message.', 'error'); return; }
+    submitBtn.disabled = true; submitBtn.classList.add('loading'); btnText.textContent = 'Signing…';
+    try {
+      const res = await fetch(EDGE_FN, {
+        method: 'POST',
+        headers: { ...AUTH, 'Content-Type':'application/json' },
+        body: JSON.stringify({ name, message, mood: selectedMood })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      nameEl.value = ''; msgEl.value = ''; charNum.textContent = '0';
+      showToast('Your entry was added! ✦', 'success');
+      loadEntries();
+    } catch { showToast('Something went wrong. Please try again.', 'error'); }
+    finally {
+      submitBtn.disabled = false; submitBtn.classList.remove('loading'); btnText.textContent = 'Sign the book';
     }
   });
 
-  // Allow Enter to submit (Shift+Enter = newline)
-  nameEl.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); submitBtn.click(); }
-  });
-
+  nameEl.addEventListener('keydown', e => { if (e.key==='Enter'){e.preventDefault();submitBtn.click();} });
+  setInterval(loadEntries, 10000);
   loadEntries();
 </script>
 </body>
