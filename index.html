@@ -489,7 +489,7 @@
     if (mode === 'signin') {
       title.textContent = 'Welcome back';
       desc.textContent  = 'Sign in to leave your mark in the guestbook.';
-      submit.textContent = 'Sign in';
+      submit.textContent = 'Sign in'; submit.style.display = '';
       fields.innerHTML = `
         <div class="field"><label>Email</label><input type="email" id="m-email" placeholder="you@example.com" /></div>
         <div class="field"><label>Password</label><input type="password" id="m-pass" placeholder="••••••••" /></div>`;
@@ -497,7 +497,7 @@
     } else {
       title.textContent = 'Join the guestbook';
       desc.textContent  = 'Create an account to sign your name forever.';
-      submit.textContent = 'Create account';
+      submit.textContent = 'Create account'; submit.style.display = '';
       fields.innerHTML = `
         <div class="field"><label>Display name</label><input type="text" id="m-name" placeholder="e.g. Ada Lovelace" maxlength="60" /></div>
         <div class="field"><label>Email</label><input type="email" id="m-email" placeholder="you@example.com" /></div>
@@ -554,7 +554,15 @@
         localStorage.setItem('gb_user', JSON.stringify(currentUser));
         closeModal();
         renderAuthArea();
-        showToast(`Welcome, ${name}! Your account is ready ✦`, 'success');
+        closeModal();
+        document.getElementById('modal-title').textContent = 'Check your email!';
+        document.getElementById('modal-desc').textContent = 'We sent a confirmation link to ' + email + '. Click it to activate your account, then come back and sign in.';
+        document.getElementById('modal-fields').innerHTML = '<div style="text-align:center;padding:1rem 0;font-size:2rem">📬</div>';
+        document.getElementById('modal-submit').style.display = 'none';
+        document.getElementById('modal-switch').innerHTML = 'Already confirmed? <span id="sw-back">Sign in</span>';
+        document.getElementById('sw-back').addEventListener("click", () => openModal("signin"));
+        document.getElementById('modal-overlay').classList.add('open');
+        showToast('Check your email to confirm your account ✦', 'success');
       }
     } catch(e) {
       err.textContent = e.message;
